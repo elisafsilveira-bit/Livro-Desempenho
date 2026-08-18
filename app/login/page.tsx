@@ -1,0 +1,57 @@
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabaseBrowser } from "@/lib/supabaseClient";
+
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    const supabase = supabaseBrowser();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
+    if (error) {
+      setError("E-mail ou senha incorretos.");
+      return;
+    }
+    router.push("/dashboard");
+    router.refresh();
+  }
+
+  return (
+    <main style={{ maxWidth: 360, margin: "80px auto", fontFamily: "sans-serif" }}>
+      <h1>Livro de Desempenho</h1>
+      <form onSubmit={handleLogin} style={{ display: "grid", gap: 12 }}>
+        <input
+          type="email"
+          placeholder="seu e-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="senha"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        {error && <p style={{ color: "crimson" }}>{error}</p>}
+        <button type="submit" disabled={loading}>
+          {loading ? "Entrando..." : "Entrar"}
+        </button>
+      </form>
+      <p style={{ fontSize: 12, marginTop: 16, color: "#666" }}>
+        Contas são criadas pelo gestor no painel do Supabase (Authentication → Users)
+        — assim cada vendedor recebe login e senha próprios, sem cadastro público.
+      </p>
+    </main>
+  );
+}
