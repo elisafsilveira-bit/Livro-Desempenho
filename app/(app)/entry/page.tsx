@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabaseClient";
-import { useProfile } from "../layout";
+import { useProfile } from "@/lib/profileContext";
 import { fmtNum, isoDate } from "@/lib/format";
 
 type Activity = { id: string; group_name: string; name: string; weight: number };
