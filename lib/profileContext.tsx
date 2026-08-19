@@ -1,0 +1,1 @@
+"use client"; import { createContext, useContext } from "react"; export type Profile = { id: string; full_name: string; role: "gestor" | "vendedor" }; export const ProfileContext = createContext<Profile | null>(null); export function useProfile() { const ctx = useContext(ProfileContext); if (!ctx) throw new Error("useProfile precisa estar dentro do AppLayout"); return ctx; }
